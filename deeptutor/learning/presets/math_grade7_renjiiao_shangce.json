@@ -1,0 +1,84 @@
+{
+  "id": "math_grade7_renjiao_shangce",
+  "name": "人教版七年级数学上册",
+  "description": "依据《义务教育数学课程标准（2022年版）》和人教版七年级上册教材目录预建的知识图谱",
+  "subject": "数学",
+  "grade": "七年级",
+  "semester": "上册",
+  "publisher": "人民教育出版社",
+  "curriculum_standard": "义务教育数学课程标准（2022年版）",
+  "tutor_hint": "你正在辅导一名初一学生（12-13岁）。请遵循以下教学原则：\n1. 语言简单易懂，避免学术化表述。第一次出现数学术语时要用日常语言解释。\n2. 多用数轴、实物比喻帮助理解。例如讲有理数加减时用「向东走/向西走」的比喻，讲绝对值时用「距离」的比喻。\n3. 解题必须分步骤书写，每一步标注依据（如「根据加法交换律」），不允许跳步。\n4. 讲概念时先给一个生活例子，再提炼数学定义，最后让学生用自己的话复述。\n5. 讲运算法则时，先讲规则，再演示1道例题，然后让学生做1道同类题。\n6. 学生答错时不要直接给答案，先问「你觉得哪一步可能出了问题？」引导他自己发现错误。\n7. 应用题（design类）要引导学生先画图/列表理清已知量和未知量，再列方程。\n8. 态度温暖鼓励。学生答对时具体表扬（如「你的步骤很清晰」而非只是「对了」），答错时说「没关系，我们来看看」。",
+  "modules": [
+    {
+      "name": "第一章 有理数",
+      "knowledge_points": [
+        { "name": "正数和负数的概念", "type": "concept" },
+        { "name": "用正负数表示相反意义的量", "type": "procedure" },
+        { "name": "有理数的分类", "type": "memory" },
+        { "name": "数轴的三要素与画法", "type": "concept" },
+        { "name": "数轴上的点与有理数的对应", "type": "concept" },
+        { "name": "相反数的概念与求法", "type": "memory" },
+        { "name": "绝对值的概念与计算", "type": "procedure" },
+        { "name": "比较有理数的大小", "type": "procedure" },
+        { "name": "有理数加法法则", "type": "procedure" },
+        { "name": "有理数加法的运算律", "type": "memory" },
+        { "name": "有理数减法法则", "type": "procedure" },
+        { "name": "有理数加减混合运算", "type": "procedure" },
+        { "name": "有理数乘法法则", "type": "procedure" },
+        { "name": "有理数乘法的运算律", "type": "memory" },
+        { "name": "有理数除法法则", "type": "procedure" },
+        { "name": "有理数的乘方", "type": "procedure" },
+        { "name": "科学记数法", "type": "procedure" },
+        { "name": "近似数与有效数字", "type": "memory" }
+      ]
+    },
+    {
+      "name": "第二章 整式的加减",
+      "knowledge_points": [
+        { "name": "用字母表示数", "type": "concept" },
+        { "name": "单项式的概念与系数、次数", "type": "concept" },
+        { "name": "多项式的概念与项、次数", "type": "concept" },
+        { "name": "整式的概念", "type": "memory" },
+        { "name": "同类项的概念与识别", "type": "concept" },
+        { "name": "合并同类项法则", "type": "procedure" },
+        { "name": "去括号法则", "type": "procedure" },
+        { "name": "整式的加减运算", "type": "procedure" },
+        { "name": "整式加减的应用", "type": "design" }
+      ]
+    },
+    {
+      "name": "第三章 一元一次方程",
+      "knowledge_points": [
+        { "name": "方程与方程的解的概念", "type": "concept" },
+        { "name": "一元一次方程的概念", "type": "memory" },
+        { "name": "等式的性质", "type": "concept" },
+        { "name": "合并同类项解方程", "type": "procedure" },
+        { "name": "移项法则", "type": "procedure" },
+        { "name": "去括号解方程", "type": "procedure" },
+        { "name": "去分母解方程", "type": "procedure" },
+        { "name": "一元一次方程解法综合", "type": "procedure" },
+        { "name": "列方程解应用题——行程问题", "type": "design" },
+        { "name": "列方程解应用题——工程问题", "type": "design" },
+        { "name": "列方程解应用题——利润与打折问题", "type": "design" },
+        { "name": "列方程解应用题——分配与配套问题", "type": "design" }
+      ]
+    },
+    {
+      "name": "第四章 几何图形初步",
+      "knowledge_points": [
+        { "name": "立体图形与平面图形的认识", "type": "concept" },
+        { "name": "立体图形的展开图", "type": "concept" },
+        { "name": "点、线、面、体的关系", "type": "memory" },
+        { "name": "直线的概念与性质", "type": "concept" },
+        { "name": "射线与线段的概念", "type": "concept" },
+        { "name": "线段的大小比较", "type": "procedure" },
+        { "name": "线段的和差与中点", "type": "procedure" },
+        { "name": "角的概念与表示", "type": "concept" },
+        { "name": "角的度量与换算", "type": "procedure" },
+        { "name": "角的比较与运算", "type": "procedure" },
+        { "name": "余角与补角", "type": "concept" },
+        { "name": "对顶角", "type": "memory" }
+      ]
+    }
+  ]
+}

@@ -34,6 +34,13 @@ class MasteryLoopCapability:
             return None
         override = _prompt_text(prompts, ("mastery", "system"))
         content = override or _load_system_prompt(language)
+        # Append subject-specific tutor hint from a preset, if one matches
+        # the active path id.  This lets preset curricula ship pedagogy
+        # guidance (e.g. "use number-line metaphors for 7th-grade math")
+        # without modifying the generic system prompt.
+        hint = _preset_tutor_hint(str(context.metadata.get("mastery_path_id") or ""))
+        if hint:
+            content = content + "\n\n" + hint
         return PromptBlock("mastery_tutor", content)
 
     def augment_kwargs(
@@ -68,6 +75,26 @@ def _load_system_prompt(language: str) -> str:
     lang = "zh" if language.lower().startswith("zh") else "en"
     prompt = resources.files(__package__).joinpath("prompts", lang, "system.md")
     return prompt.read_text(encoding="utf-8").strip()
+
+
+def _preset_tutor_hint(path_id: str) -> str:
+    """Return the ``tutor_hint`` from a preset whose id matches *path_id*.
+
+    Returns an empty string when no preset matches, so callers can simply
+    check truthiness.  Import is lazy to avoid a circular dependency at
+    module load (``deeptutor.learning.presets`` imports from
+    ``deeptutor.learning.models`` which is fine, but keeping it lazy is
+    consistent with the rest of this module's import discipline).
+    """
+    if not path_id:
+        return ""
+    try:
+        from deeptutor.learning.presets import load_preset
+
+        data = load_preset(path_id)
+        return str(data.get("tutor_hint") or "").strip()
+    except Exception:
+        return ""
 
 
 __all__ = ["MasteryLoopCapability"]

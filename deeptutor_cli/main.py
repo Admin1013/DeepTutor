@@ -15,6 +15,7 @@ from .common import build_turn_request, console, maybe_run
 from .config_cmd import register as register_config
 from .init_cmd import register as register_init
 from .kb import register as register_kb
+from .learning_cmd import register as register_learning
 from .memory import register as register_memory
 from .notebook import register as register_notebook
 from .partner import register as register_partner
@@ -39,6 +40,7 @@ kb_app = typer.Typer(help="Manage knowledge bases.")
 skill_app = typer.Typer(help="Manage skills and install from hubs (ClawHub, …).")
 memory_app = typer.Typer(help="View and manage lightweight memory.")
 plugin_app = typer.Typer(help="List plugins.")
+learning_app = typer.Typer(help="Manage preset learning paths (no API key needed).")
 config_app = typer.Typer(help="Inspect configuration.")
 session_app = typer.Typer(help="Manage shared sessions.")
 notebook_app = typer.Typer(help="Manage notebooks and imported markdown records.")
@@ -51,6 +53,7 @@ app.add_typer(kb_app, name="kb")
 app.add_typer(skill_app, name="skill")
 app.add_typer(skill_app, name="skills")  # alias: `deeptutor skills …`
 app.add_typer(memory_app, name="memory")
+app.add_typer(learning_app, name="learning")
 app.add_typer(plugin_app, name="plugin")
 app.add_typer(config_app, name="config")
 app.add_typer(session_app, name="session")
@@ -63,6 +66,7 @@ register_chat(chat_app)
 register_kb(kb_app)
 register_skill(skill_app)
 register_memory(memory_app)
+register_learning(learning_app)
 register_plugin(plugin_app)
 register_config(config_app)
 register_session(session_app)
