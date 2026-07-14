@@ -9,6 +9,7 @@ from deeptutor.learning.grading import classify_error, grade_answer
 from deeptutor.learning.mastery import compute_mastery
 from deeptutor.learning.models import (
     ErrorRecord,
+    ErrorType,
     LearningModule,
     LearningProgress,
     LearningStage,
