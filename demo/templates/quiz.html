@@ -39,7 +39,9 @@
         </button>
     </form>
 </div>
+{% endblock %}
 
+{% block scripts %}
 <script>
     // 选中后高亮
     document.querySelectorAll('input[name="answer"]').forEach(input => {
@@ -48,5 +50,7 @@
             input.parentElement.classList.add('border-blue-500', 'bg-blue-50');
         });
     });
+    // 渲染题目和选项中的 $...$ 公式
+    window.renderMath(document.getElementById('quiz-form'));
 </script>
 {% endblock %}

@@ -17,11 +17,6 @@
         <div id="explanation-content" class="prose prose-sm max-w-none text-gray-700 leading-relaxed">
             {{ explanation }}
         </div>
-        <script>
-            // 用 marked.js 渲染 markdown
-            const raw = {{ explanation | tojson }};
-            document.getElementById('explanation-content').innerHTML = marked.parse(raw);
-        </script>
         {% else %}
         <div class="text-center py-8 text-gray-400">
             <p class="mb-2">📖 这个知识点的讲解还在准备中</p>
@@ -41,4 +36,16 @@
         返回地图
     </a>
 </div>
+{% endblock %}
+
+{% block scripts %}
+{% if explanation %}
+<script>
+    // 用 marked.js 渲染 markdown，再渲染其中的 $...$ 公式
+    const raw = {{ explanation | tojson }};
+    const box = document.getElementById('explanation-content');
+    box.innerHTML = marked.parse(raw);
+    window.renderMath(box);
+</script>
+{% endif %}
 {% endblock %}

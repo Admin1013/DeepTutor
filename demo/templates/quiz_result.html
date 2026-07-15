@@ -2,7 +2,7 @@
 {% block title %}答题反馈 · {{ kp.name }}{% endblock %}
 
 {% block content %}
-<div class="bg-white rounded-lg border border-gray-200 overflow-hidden mb-4">
+<div id="result-card" class="bg-white rounded-lg border border-gray-200 overflow-hidden mb-4">
     <div class="px-5 py-4 border-b border-gray-100">
         <div class="text-xs text-gray-500 mb-1">{{ kp.name }}</div>
     </div>
@@ -83,4 +83,11 @@
         返回地图
     </a>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // 渲染题目、选项、解析中的 $...$ 公式
+    window.renderMath(document.getElementById('result-card'));
+</script>
 {% endblock %}

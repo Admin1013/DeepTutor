@@ -6,6 +6,11 @@
     <title>{% block title %}初一数学{% endblock %}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <!-- KaTeX：用于渲染 $...$ 和 $$...$$ 数学公式 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+            onload="window.__katexReady=true;"></script>
     <link rel="stylesheet" href="/static/app.css">
     {% block head %}{% endblock %}
 </head>
@@ -31,6 +36,36 @@
     <footer class="max-w-4xl mx-auto px-4 py-6 text-center text-xs text-gray-400">
         <p>初一数学学习辅助 · 人教版七年级上册</p>
     </footer>
+
+    <script>
+        // 全局公式渲染函数：等 KaTeX auto-render 加载完成后渲染指定元素内的 $...$ / $$...$$
+        window.renderMath = function (el) {
+            el = el || document.body;
+            if (window.__katexReady !== true) {
+                // KaTeX 尚未加载完，50ms 后重试（最多 ~3s）
+                if (!el.__mathRetry) el.__mathRetry = 0;
+                if (el.__mathRetry < 60) {
+                    el.__mathRetry++;
+                    setTimeout(() => window.renderMath(el), 50);
+                }
+                return;
+            }
+            try {
+                renderMathInElement(el, {
+                    delimiters: [
+                        { left: "$$", right: "$$", display: true },
+                        { left: "$", right: "$", display: false },
+                        { left: "\\(", right: "\\)", display: false },
+                        { left: "\\[", right: "\\]", display: true }
+                    ],
+                    throwOnError: false,
+                    ignoredTags: ["script", "style", "textarea", "pre", "code"]
+                });
+            } catch (e) {
+                console.warn("KaTeX render failed:", e);
+            }
+        };
+    </script>
 
     {% block scripts %}{% endblock %}
 </body>
