@@ -12,7 +12,7 @@ data/default.json
 data/default.json.bak*
 data/*.tmp.*
 
-# 中间产物
+# 中间产物（题库脚本生成）
 data/_unmapped.json
 data/cmm_math_g7_raw.json
 data/questions_v2.json

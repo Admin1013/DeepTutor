@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block title %}答题反馈 · {{ kp.name }}{% endblock %}
+
+{% block content %}
+<div class="bg-white rounded-lg border border-gray-200 overflow-hidden mb-4">
+    <div class="px-5 py-4 border-b border-gray-100">
+        <div class="text-xs text-gray-500 mb-1">{{ kp.name }}</div>
+    </div>
+
+    <!-- 结果横幅 -->
+    <div class="px-5 py-6 text-center {% if is_correct %}bg-green-50{% else %}bg-red-50{% endif %}">
+        {% if is_correct %}
+        <div class="text-5xl mb-2">🎉</div>
+        <div class="text-xl font-bold text-green-700">答对了！</div>
+        <p class="text-sm text-green-600 mt-1">{{ "步骤很清晰" if kp.type == "procedure" else "理解到位" }}</p>
+        {% else %}
+        <div class="text-5xl mb-2">💪</div>
+        <div class="text-xl font-bold text-red-700">没关系，我们来看看</div>
+        <p class="text-sm text-red-600 mt-1">错题是最好的学习机会</p>
+        {% endif %}
+    </div>
+
+    <!-- 题目回顾 -->
+    <div class="px-5 py-4 border-t border-gray-100">
+        <div class="text-sm text-gray-600 mb-3">{{ question.question }}</div>
+
+        <div class="space-y-2 mb-4">
+            {% for opt in question.options %}
+            {% set is_user = loop.index0 == user_answer %}
+            {% set is_right = loop.index0 == question.answer %}
+            <div class="flex items-center gap-3 p-3 rounded-lg border
+                {% if is_right %}border-green-500 bg-green-50{% elif is_user %}border-red-500 bg-red-50{% else %}border-gray-200{% endif %}">
+                <span class="w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold
+                    {% if is_right %}bg-green-500 text-white{% elif is_user %}bg-red-500 text-white{% else %}bg-gray-200 text-gray-600{% endif %}">
+                    {% if is_right %}✓{% elif is_user %}✗{% else %}{{ "ABCD"[loop.index0] }}{% endif %}
+                </span>
+                <span class="text-sm {% if is_right %}text-green-700{% elif is_user %}text-red-700{% else %}text-gray-700{% endif %}">
+                    {{ opt }}
+                </span>
+                {% if is_right %}<span class="ml-auto text-xs text-green-600">正确答案</span>{% endif %}
+                {% if is_user and not is_right %}<span class="ml-auto text-xs text-red-600">你的选择</span>{% endif %}
+            </div>
+            {% endfor %}
+        </div>
+
+        {% if question.analysis %}
+        <div class="bg-blue-50 rounded-lg p-4 mt-4">
+            <div class="text-xs text-blue-600 font-semibold mb-2">💡 解析</div>
+            <div class="text-sm text-gray-700 leading-relaxed">{{ question.analysis }}</div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- 掌握度反馈 -->
+<div class="bg-white rounded-lg border border-gray-200 p-4 mb-4">
+    <div class="flex items-center justify-between mb-2">
+        <span class="text-sm font-medium text-gray-700">掌握度</span>
+        <span class="text-sm font-bold {% if is_mastered %}text-green-600{% else %}text-blue-600{% endif %}">
+            {{ (mastery * 100) | round }}%
+        </span>
+    </div>
+    <div class="h-2 bg-gray-100 rounded-full overflow-hidden">
+        <div class="h-full {% if is_mastered %}bg-green-500{% else %}bg-blue-500{% endif %}" style="width: {{ mastery * 100 }}%"></div>
+    </div>
+    {% if is_mastered %}
+    <p class="text-xs text-green-600 mt-2">🎉 已掌握这个知识点！</p>
+    {% endif %}
+</div>
+
+<!-- 下一步 -->
+<div class="flex gap-3">
+    {% if q_index + 1 < q_total %}
+    <a href="/quiz/{{ kp.name }}?q={{ q_index + 1 }}" class="flex-1 bg-blue-600 text-white text-center py-3 rounded-lg font-medium hover:bg-blue-700">
+        下一题 →
+    </a>
+    {% else %}
+    <a href="/result/{{ kp.name }}" class="flex-1 bg-blue-600 text-white text-center py-3 rounded-lg font-medium hover:bg-blue-700">
+        查看结果 →
+    </a>
+    {% endif %}
+    <a href="/" class="px-6 py-3 bg-gray-100 text-gray-700 text-center rounded-lg font-medium hover:bg-gray-200">
+        返回地图
+    </a>
+</div>
+{% endblock %}

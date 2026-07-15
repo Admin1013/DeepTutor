@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block title %}{{ kp.name }} · 学习结果{% endblock %}
+
+{% block content %}
+<div class="mb-4">
+    <a href="/" class="text-sm text-gray-500 hover:text-blue-600">← 返回地图</a>
+</div>
+
+<div class="bg-white rounded-lg border border-gray-200 overflow-hidden mb-4">
+    <div class="px-5 py-4 border-b border-gray-100">
+        <div class="text-xs text-gray-500 mb-1">{{ kp.module_name }} · {{ kp.type }}</div>
+        <h1 class="text-xl font-bold text-gray-900">{{ kp.name }}</h1>
+    </div>
+
+    <!-- 掌握度大圆环 -->
+    <div class="px-5 py-8 text-center">
+        <div class="inline-flex items-center justify-center w-32 h-32 rounded-full {% if stats.is_mastered %}bg-green-100{% else %}bg-blue-100{% endif %} mb-3">
+            <div class="text-3xl font-bold {% if stats.is_mastered %}text-green-600{% else %}text-blue-600{% endif %}">
+                {{ (stats.mastery * 100) | round }}%
+            </div>
+        </div>
+        {% if stats.is_mastered %}
+        <div class="text-lg font-semibold text-green-600">已掌握 🎉</div>
+        {% else %}
+        <div class="text-lg font-semibold text-blue-600">继续加油</div>
+        {% endif %}
+    </div>
+
+    <!-- 统计 -->
+    <div class="grid grid-cols-3 gap-3 px-5 pb-5">
+        <div class="text-center p-3 bg-gray-50 rounded-lg">
+            <div class="text-xl font-bold text-gray-900">{{ stats.total_attempts }}</div>
+            <div class="text-xs text-gray-500 mt-1">答题数</div>
+        </div>
+        <div class="text-center p-3 bg-gray-50 rounded-lg">
+            <div class="text-xl font-bold text-green-600">{{ stats.correct_count }}</div>
+            <div class="text-xs text-gray-500 mt-1">答对数</div>
+        </div>
+        <div class="text-center p-3 bg-gray-50 rounded-lg">
+            <div class="text-xl font-bold text-blue-600">{{ (stats.accuracy * 100) | round }}%</div>
+            <div class="text-xs text-gray-500 mt-1">正确率</div>
+        </div>
+    </div>
+
+    {% if stats.ability %}
+    <!-- 四维能力 -->
+    <div class="px-5 pb-5">
+        <div class="text-xs text-gray-500 font-semibold mb-2">能力画像</div>
+        <div class="space-y-2">
+            {% set ab = stats.ability %}
+            {% set labels = {"memory": "记忆", "understanding": "理解", "application": "应用", "analysis": "分析"} %}
+            {% for key, label in labels.items() %}
+            <div class="flex items-center gap-3">
+                <span class="text-xs text-gray-600 w-10">{{ label }}</span>
+                <div class="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
+                    <div class="h-full bg-blue-500" style="width: {{ ab[key] * 100 }}%"></div>
+                </div>
+                <span class="text-xs text-gray-500 w-10 text-right">{{ (ab[key] * 100) | round }}%</span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<div class="flex gap-3">
+    <a href="/quiz/{{ kp.name }}" class="flex-1 bg-blue-600 text-white text-center py-3 rounded-lg font-medium hover:bg-blue-700">
+        继续做题 →
+    </a>
+    <a href="/" class="px-6 py-3 bg-gray-100 text-gray-700 text-center rounded-lg font-medium hover:bg-gray-200">
+        返回地图
+    </a>
+</div>
+{% endblock %}

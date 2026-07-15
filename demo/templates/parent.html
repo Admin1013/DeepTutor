@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% block title %}家长概览 · 初一数学{% endblock %}
+
+{% block content %}
+<div class="mb-6">
+    <h1 class="text-2xl font-bold text-gray-900 mb-2">家长概览</h1>
+    <p class="text-gray-600 text-sm">孩子今天学得怎么样？</p>
+</div>
+
+<!-- 进度环 -->
+<div class="bg-white rounded-lg border border-gray-200 p-6 mb-6 text-center">
+    <div class="inline-flex items-center justify-center w-40 h-40 rounded-full bg-gradient-to-br from-blue-100 to-green-100 mb-3 relative">
+        <svg class="absolute inset-0" viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="45" fill="none" stroke="#e5e7eb" stroke-width="6"/>
+            <circle cx="50" cy="50" r="45" fill="none" stroke="#3b82f6" stroke-width="6"
+                stroke-dasharray="{{ 2 * 3.14159 * 45 }}"
+                stroke-dashoffset="{{ 2 * 3.14159 * 45 * (1 - overview.master_rate) }}"
+                transform="rotate(-90 50 50)"/>
+        </svg>
+        <div class="relative z-10">
+            <div class="text-3xl font-bold text-blue-600">{{ (overview.master_rate * 100) | round }}%</div>
+            <div class="text-xs text-gray-500 mt-1">总掌握率</div>
+        </div>
+    </div>
+    <p class="text-sm text-gray-600">
+        已掌握 <span class="font-bold text-green-600">{{ overview.mastered }}</span> / {{ overview.total_kps }} 个知识点
+    </p>
+</div>
+
+<!-- 本周数据 -->
+<div class="grid grid-cols-3 gap-3 mb-6">
+    <div class="bg-white rounded-lg p-4 border border-gray-200 text-center">
+        <div class="text-2xl font-bold text-blue-600">{{ recent_attempts }}</div>
+        <div class="text-xs text-gray-500 mt-1">本周答题</div>
+    </div>
+    <div class="bg-white rounded-lg p-4 border border-gray-200 text-center">
+        <div class="text-2xl font-bold text-green-600">{{ (recent_accuracy * 100) | round }}%</div>
+        <div class="text-xs text-gray-500 mt-1">正确率</div>
+    </div>
+    <div class="bg-white rounded-lg p-4 border border-gray-200 text-center">
+        <div class="text-2xl font-bold text-orange-600">{{ study_streak }}</div>
+        <div class="text-xs text-gray-500 mt-1">连续学习天数</div>
+    </div>
+</div>
+
+<!-- 薄弱章节 -->
+{% if weak_modules %}
+<div class="bg-white rounded-lg border border-gray-200 p-5 mb-6">
+    <h2 class="font-semibold text-gray-900 mb-3">需要关注的章节</h2>
+    <div class="space-y-3">
+        {% for m in weak_modules %}
+        <div>
+            <div class="flex items-center justify-between mb-1">
+                <span class="text-sm font-medium text-gray-700">{{ m.name }}</span>
+                <span class="text-xs text-gray-500">{{ m.mastered }}/{{ m.total }}</span>
+            </div>
+            <div class="h-2 bg-gray-100 rounded-full overflow-hidden">
+                <div class="h-full bg-orange-500" style="width: {{ m.rate * 100 }}%"></div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+<!-- 错误类型 -->
+{% if error_patterns %}
+<div class="bg-white rounded-lg border border-gray-200 p-5 mb-6">
+    <h2 class="font-semibold text-gray-900 mb-3">错误类型分析</h2>
+    <div class="space-y-2">
+        {% for etype, count in error_patterns.items() %}
+        <div class="flex items-center gap-3 p-3 bg-red-50 rounded-lg">
+            <span class="text-sm text-gray-700 flex-1">{{ etype }}</span>
+            <div class="flex items-center gap-2">
+                <div class="w-20 h-2 bg-red-100 rounded-full overflow-hidden">
+                    <div class="h-full bg-red-500" style="width: {{ count * 10 }}%; max-width: 100%"></div>
+                </div>
+                <span class="text-sm font-bold text-red-600 w-12 text-right">{{ count }} 次</span>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <p class="text-xs text-gray-400 mt-3">💡 建议：针对错误类型，引导孩子先回顾对应知识点的讲解再做练习</p>
+</div>
+{% endif %}
+
+<!-- 学习建议 -->
+<div class="bg-blue-50 rounded-lg p-5 border border-blue-200">
+    <div class="text-sm font-semibold text-blue-900 mb-2">💡 给家长的建议</div>
+    <ul class="text-sm text-gray-700 space-y-1 list-disc list-inside">
+        <li>每天保持 20-30 分钟学习，比一次性学 2 小时效果更好</li>
+        <li>关注"连续学习天数"，养成习惯比单次成绩重要</li>
+        <li>孩子答错时不要急躁，引导他说出"哪一步可能错了"</li>
+        <li>掌握度达 85% 即视为掌握，不要追求 100%</li>
+    </ul>
+</div>
+{% endblock %}

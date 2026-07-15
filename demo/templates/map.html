@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% block title %}知识地图 · 初一数学{% endblock %}
+
+{% block content %}
+<div class="mb-6">
+    <h1 class="text-2xl font-bold text-gray-900 mb-2">知识地图</h1>
+    <p class="text-gray-600 text-sm">人教版七年级数学上册 · 共 {{ overview.total_kps }} 个知识点</p>
+</div>
+
+<!-- 概览统计 -->
+<div class="grid grid-cols-4 gap-3 mb-6">
+    <div class="bg-white rounded-lg p-4 border border-gray-200">
+        <div class="text-2xl font-bold text-green-600">{{ overview.mastered }}</div>
+        <div class="text-xs text-gray-500 mt-1">已掌握</div>
+    </div>
+    <div class="bg-white rounded-lg p-4 border border-gray-200">
+        <div class="text-2xl font-bold text-blue-600">{{ overview.started }}</div>
+        <div class="text-xs text-gray-500 mt-1">学习中</div>
+    </div>
+    <div class="bg-white rounded-lg p-4 border border-gray-200">
+        <div class="text-2xl font-bold text-gray-400">{{ overview.not_started }}</div>
+        <div class="text-xs text-gray-500 mt-1">未开始</div>
+    </div>
+    <div class="bg-white rounded-lg p-4 border border-gray-200">
+        <div class="text-2xl font-bold text-orange-600">{{ overview.due_reviews }}</div>
+        <div class="text-xs text-gray-500 mt-1">待复习</div>
+    </div>
+</div>
+
+<!-- 推荐下一步 -->
+{% if next_step %}
+<div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-4 mb-6 border border-blue-200">
+    <div class="flex items-center justify-between">
+        <div>
+            <div class="text-xs text-blue-600 font-semibold mb-1">推荐下一步</div>
+            <a href="/learn/{{ next_step.kp_name }}" class="text-lg font-bold text-gray-900 hover:text-blue-600">
+                {{ next_step.kp_name }}
+            </a>
+            <p class="text-sm text-gray-600 mt-1">{{ next_step.reason }}</p>
+        </div>
+        <a href="/learn/{{ next_step.kp_name }}" class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700">
+            开始 →
+        </a>
+    </div>
+</div>
+{% endif %}
+
+<!-- 知识点地图 -->
+{% for module in modules %}
+<div class="bg-white rounded-lg border border-gray-200 mb-4 overflow-hidden">
+    <div class="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
+        <h2 class="font-semibold text-gray-900">{{ module.name }}</h2>
+        <span class="text-xs text-gray-500">{{ module.mastered }}/{{ module.total }}</span>
+    </div>
+    <div class="divide-y divide-gray-100">
+        {% for kp in module.knowledge_points %}
+        <div class="px-4 py-3 flex items-center justify-between hover:bg-gray-50">
+            <div class="flex items-center gap-3 flex-1">
+                {% if kp.status == "mastered" %}
+                <span class="w-2 h-2 rounded-full bg-green-500"></span>
+                {% elif kp.status == "learning" %}
+                <span class="w-2 h-2 rounded-full bg-blue-500"></span>
+                {% else %}
+                <span class="w-2 h-2 rounded-full bg-gray-300"></span>
+                {% endif %}
+                <div class="flex-1">
+                    <a href="/learn/{{ kp.name }}" class="text-sm font-medium text-gray-900 hover:text-blue-600">
+                        {{ kp.name }}
+                    </a>
+                    <div class="text-xs text-gray-400 mt-0.5">
+                        <span class="mr-2">{{ kp.type }}</span>
+                        {% if kp.status == "learning" %}
+                        <span>掌握度 {{ (kp.mastery * 100) | round }}%</span>
+                        {% elif kp.status == "mastered" %}
+                        <span class="text-green-600">已掌握</span>
+                        {% else %}
+                        <span>未开始</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% if kp.status != "mastered" %}
+            <a href="/learn/{{ kp.name }}" class="text-xs text-blue-600 hover:text-blue-700 font-medium">
+                {% if kp.status == "learning" %}继续{% else %}开始{% endif %} →
+            </a>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endfor %}
+{% endblock %}

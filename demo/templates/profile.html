@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% block title %}我的画像 · 初一数学{% endblock %}
+
+{% block head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="mb-6">
+    <h1 class="text-2xl font-bold text-gray-900 mb-2">我的学习画像</h1>
+    <p class="text-gray-600 text-sm">四维能力 · 基于布鲁姆认知分类法</p>
+</div>
+
+<!-- 概览 -->
+<div class="grid grid-cols-3 gap-3 mb-6">
+    <div class="bg-white rounded-lg p-4 border border-gray-200 text-center">
+        <div class="text-2xl font-bold text-green-600">{{ overview.mastered }}</div>
+        <div class="text-xs text-gray-500 mt-1">已掌握</div>
+    </div>
+    <div class="bg-white rounded-lg p-4 border border-gray-200 text-center">
+        <div class="text-2xl font-bold text-orange-600">{{ overview.total_attempts }}</div>
+        <div class="text-xs text-gray-500 mt-1">总答题数</div>
+    </div>
+    <div class="bg-white rounded-lg p-4 border border-gray-200 text-center">
+        <div class="text-2xl font-bold text-purple-600">{{ overview.study_streak }}</div>
+        <div class="text-xs text-gray-500 mt-1">连续学习天数</div>
+    </div>
+</div>
+
+<!-- 雷达图 -->
+<div class="bg-white rounded-lg border border-gray-200 p-5 mb-6">
+    <h2 class="font-semibold text-gray-900 mb-4">能力雷达图</h2>
+    <div class="relative" style="height: 300px;">
+        <canvas id="ability-chart"></canvas>
+    </div>
+</div>
+
+<!-- 薄弱知识点 -->
+{% if weak_kps %}
+<div class="bg-white rounded-lg border border-gray-200 p-5 mb-6">
+    <h2 class="font-semibold text-gray-900 mb-3">需要加强的知识点</h2>
+    <div class="space-y-2">
+        {% for kp in weak_kps %}
+        <a href="/learn/{{ kp.name }}" class="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-blue-50">
+            <div>
+                <div class="text-sm font-medium text-gray-900">{{ kp.name }}</div>
+                <div class="text-xs text-gray-500">{{ kp.type }}</div>
+            </div>
+            <div class="text-right">
+                <div class="text-sm font-bold text-red-600">{{ (kp.mastery * 100) | round }}%</div>
+                <div class="text-xs text-gray-400">掌握度</div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+<!-- 错误模式 -->
+{% if error_patterns %}
+<div class="bg-white rounded-lg border border-gray-200 p-5">
+    <h2 class="font-semibold text-gray-900 mb-3">错误类型统计</h2>
+    <div class="space-y-2">
+        {% for etype, count in error_patterns.items() %}
+        <div class="flex items-center justify-between p-3 bg-red-50 rounded-lg">
+            <span class="text-sm text-gray-700">{{ etype }}</span>
+            <span class="text-sm font-bold text-red-600">{{ count }} 次</span>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+<script>
+    const ctx = document.getElementById('ability-chart').getContext('2d');
+    new Chart(ctx, {
+        type: 'radar',
+        data: {
+            labels: ['记忆', '理解', '应用', '分析'],
+            datasets: [{
+                label: '能力值',
+                data: [
+                    {{ (dims.memory * 100) | round }},
+                    {{ (dims.understanding * 100) | round }},
+                    {{ (dims.application * 100) | round }},
+                    {{ (dims.analysis * 100) | round }}
+                ],
+                backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                borderColor: 'rgba(59, 130, 246, 1)',
+                pointBackgroundColor: 'rgba(59, 130, 246, 1)',
+                borderWidth: 2,
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                r: {
+                    beginAtZero: true,
+                    max: 100,
+                    ticks: { stepSize: 20 }
+                }
+            },
+            plugins: {
+                legend: { display: false }
+            }
+        }
+    });
+</script>
+{% endblock %}

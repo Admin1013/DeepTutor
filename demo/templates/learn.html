@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}{{ kp.name }} · 学习{% endblock %}
+
+{% block content %}
+<div class="mb-4">
+    <a href="/" class="text-sm text-gray-500 hover:text-blue-600">← 返回地图</a>
+</div>
+
+<div class="bg-white rounded-lg border border-gray-200 overflow-hidden mb-4">
+    <div class="px-5 py-4 border-b border-gray-100">
+        <div class="text-xs text-gray-500 mb-1">{{ kp.module_name }} · {{ kp.type }}</div>
+        <h1 class="text-xl font-bold text-gray-900">{{ kp.name }}</h1>
+    </div>
+
+    <div class="px-5 py-4">
+        {% if explanation %}
+        <div id="explanation-content" class="prose prose-sm max-w-none text-gray-700 leading-relaxed">
+            {{ explanation }}
+        </div>
+        <script>
+            // 用 marked.js 渲染 markdown
+            const raw = {{ explanation | tojson }};
+            document.getElementById('explanation-content').innerHTML = marked.parse(raw);
+        </script>
+        {% else %}
+        <div class="text-center py-8 text-gray-400">
+            <p class="mb-2">📖 这个知识点的讲解还在准备中</p>
+            <p class="text-sm">可以直接去做题练习</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="flex gap-3">
+    {% if has_questions %}
+    <a href="/quiz/{{ kp.name }}" class="flex-1 bg-blue-600 text-white text-center py-3 rounded-lg font-medium hover:bg-blue-700">
+        开始做题 →
+    </a>
+    {% endif %}
+    <a href="/" class="px-6 py-3 bg-gray-100 text-gray-700 text-center rounded-lg font-medium hover:bg-gray-200">
+        返回地图
+    </a>
+</div>
+{% endblock %}
