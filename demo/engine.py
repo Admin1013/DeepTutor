@@ -120,12 +120,11 @@ def schedule_review(
         # 错误 → 回到 0（明天复习）
         return 0, time.time() + 1 * 86400
 
-    # 连续 2 次正确 → 跳级
-    new_index = current_interval_index
+    # 连续 2 次正确 → 跳级；否则保持当前间隔
     if consecutive_correct >= 2:
         new_index = min(current_interval_index + 1, len(REVIEW_INTERVALS) - 1)
     else:
-        new_index = min(current_interval_index + 1, len(REVIEW_INTERVALS) - 1)
+        new_index = current_interval_index
 
     days = REVIEW_INTERVALS[new_index]
     due_at = time.time() + days * 86400

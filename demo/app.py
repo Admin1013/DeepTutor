@@ -14,7 +14,7 @@
 from __future__ import annotations
 
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 
 from fastapi import FastAPI, Form, Request
@@ -23,6 +23,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
 from engine import (
+    BKT_PRIORS,
     MASTERY_THRESHOLD,
     QuizBank,
     bkt_update,
@@ -137,7 +138,7 @@ async def quiz_submit(
         p.attempts.append(attempt)
 
         # BKT 更新（含遗忘衰减）
-        prior = p.mastery.get(kp_name, 0.15)  # 默认先验 0.15
+        prior = p.mastery.get(kp_name, BKT_PRIORS.get(kp.type, 0.15))
         last_attempt = next(
             (a for a in reversed(p.attempts[:-1]) if a.kp_name == kp_name),
             None,
@@ -156,6 +157,7 @@ async def quiz_submit(
 
         # 间隔重复更新
         existing = next((t for t in p.review_queue if t.kp_name == kp_name), None)
+        # 统计当前 KP 的连续答对次数（跳过其他 KP 的 attempt）
         consecutive_correct = 0
         for a in reversed(p.attempts):
             if a.kp_name == kp_name:
@@ -163,8 +165,6 @@ async def quiz_submit(
                     consecutive_correct += 1
                 else:
                     break
-            else:
-                break
 
         if existing:
             new_idx, due_at = schedule_review(
@@ -194,7 +194,7 @@ async def quiz_submit(
         today = datetime.now().strftime("%Y-%m-%d")
         if p.last_study_date != today:
             if p.last_study_date:
-                yesterday = (datetime.now().replace(day=datetime.now().day - 1)).strftime("%Y-%m-%d")
+                yesterday = (datetime.now() - timedelta(days=1)).strftime("%Y-%m-%d")
                 if p.last_study_date == yesterday:
                     p.study_streak += 1
                 else:
