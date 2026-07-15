@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+.pytest_cache/
+
+# 运行时数据（学生答题记录，会变）
+data/default.json
+data/default.json.bak*
+data/*.tmp.*
+
+# 中间产物
+data/_unmapped.json
+data/cmm_math_g7_raw.json
+data/questions_v2.json
+
+# 虚拟环境
+.venv/
+venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
